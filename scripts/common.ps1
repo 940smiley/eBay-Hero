@@ -8,15 +8,38 @@ function Get-RepoRoot {
 function Get-PathConfig {
     $repo = Get-RepoRoot
     $path = Join-Path $repo 'config\paths.json'
-    if (-not (Test-Path -LiteralPath $path)) { throw "Missing path config: $path" }
+    if (-not (Test-Path -LiteralPath $path)) {
+        $buildRoot = if ($env:EA_BUILD_ROOT) { $env:EA_BUILD_ROOT } else { Join-Path $repo 'artifacts\build' }
+        $stateRoot = if ($env:LOCALAPPDATA) { Join-Path $env:LOCALAPPDATA 'EbayAssistance' } else { Join-Path $repo 'artifacts\state' }
+        return [pscustomobject]@{
+            RepositoryRoot = $repo
+            OperationsRoot = $stateRoot
+            InventorySource = Join-Path $repo 'demo-data\inventory'
+            SharedToolsRoot = Join-Path $buildRoot 'tools'
+            SharedAppsRoot = Join-Path $buildRoot 'apps'
+            SharedCacheRoot = Join-Path $buildRoot 'cache'
+            OperationsToolsRoot = Join-Path $buildRoot 'ops-tools'
+            TesseractPath = 'tesseract'
+            ArtifactsRoot = Join-Path $repo 'artifacts'
+            TemporaryTestRoot = Join-Path $buildRoot 'tmp'
+            LogRoot = Join-Path $stateRoot 'Logs'
+            SecretStorageRoot = Join-Path $stateRoot 'Secrets'
+        }
+    }
     return Get-Content -Raw -LiteralPath $path | ConvertFrom-Json
 }
 
 function Set-ProjectProcessEnvironment {
     $config = Get-PathConfig
     New-Item -ItemType Directory -Force -Path $config.SharedCacheRoot, $config.TemporaryTestRoot, $config.LogRoot | Out-Null
-    $env:NUGET_PACKAGES = Join-Path $config.SharedCacheRoot 'NuGet'
-    $env:DOTNET_CLI_HOME = Join-Path $config.SharedCacheRoot 'DotNetCliHome'
+    if (-not $env:NUGET_PACKAGES) { $env:NUGET_PACKAGES = Join-Path $config.SharedCacheRoot 'NuGet' }
+    if (-not $env:DOTNET_CLI_HOME) { $env:DOTNET_CLI_HOME = Join-Path $config.SharedCacheRoot 'DotNetCliHome' }
+    if (-not $env:EA_BUILD_ROOT) { $env:EA_BUILD_ROOT = Join-Path $config.SharedCacheRoot 'Build' }
+    if (-not $env:NUGET_HTTP_CACHE_PATH) { $env:NUGET_HTTP_CACHE_PATH = Join-Path $config.SharedCacheRoot 'NuGetHttpCache' }
+    if (-not $env:NUGET_SCRATCH) { $env:NUGET_SCRATCH = Join-Path $config.SharedCacheRoot 'NuGetScratch' }
+    if (-not $env:TEMP -or $env:TEMP -like "$env:LOCALAPPDATA*") { $env:TEMP = $config.TemporaryTestRoot }
+    if (-not $env:TMP -or $env:TMP -like "$env:LOCALAPPDATA*") { $env:TMP = $config.TemporaryTestRoot }
+    New-Item -ItemType Directory -Force -Path $env:NUGET_PACKAGES, $env:DOTNET_CLI_HOME, $env:NUGET_HTTP_CACHE_PATH, $env:NUGET_SCRATCH, $env:TEMP, $env:TMP | Out-Null
     $env:IPO_PATH_CONFIG = Join-Path (Get-RepoRoot) 'config\paths.json'
 }
 

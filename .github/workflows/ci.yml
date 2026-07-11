@@ -1,12 +1,15 @@
-name: build
+name: ci
 
 on:
   push:
   pull_request:
 
 jobs:
-  build-test:
+  windows:
     runs-on: windows-latest
+    env:
+      EA_BUILD_ROOT: ${{ runner.temp }}\ebay-assistance-build
+      EA_RELEASE_ROOT: ${{ runner.temp }}\ebay-assistance-release
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -21,7 +24,7 @@ jobs:
         shell: pwsh
         run: |
           $errorsFound = $false
-          Get-ChildItem -Recurse -File -Filter *.ps1 | Where-Object { $_.FullName -notmatch '\\legacy-powershell\\' } | ForEach-Object {
+          Get-ChildItem -Recurse -File -Filter *.ps1 | ForEach-Object {
             $tokens = $null
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errors) | Out-Null
@@ -34,30 +37,30 @@ jobs:
       - name: Build
         run: dotnet build InventoryPhotoOps.sln -c Release --no-restore
       - name: Test
-        run: dotnet test InventoryPhotoOps.sln -c Release --no-build --logger trx --results-directory TestResults
+        run: dotnet test InventoryPhotoOps.sln -c Release --no-build --logger trx --results-directory "${{ runner.temp }}\test-results"
+      - name: Diagnostic bundle
+        shell: pwsh
+        run: ./scripts/Collect-Diagnostics.ps1 -OutputRoot "${{ runner.temp }}\diagnostics"
       - name: Publish portable
-        run: pwsh ./scripts/publish-portable.ps1
-      - name: Build installer
-        run: pwsh ./scripts/build-installer.ps1
-      - name: Verify release
-        run: pwsh ./scripts/verify-release.ps1
+        shell: pwsh
+        run: ./scripts/publish-portable.ps1
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-results
-          path: TestResults
+          path: ${{ runner.temp }}\test-results
+      - name: Upload diagnostics
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: diagnostics
+          path: ${{ runner.temp }}\diagnostics
       - name: Upload portable package
         uses: actions/upload-artifact@v4
         with:
-          name: InventoryPhotoOps-win-x64-portable
+          name: eBay-Assistance-win-x64-portable
           path: |
-            artifacts/InventoryPhotoOps-win-x64-portable.zip
-            artifacts/InventoryPhotoOps-win-x64-portable.zip.sha256
-      - name: Upload installer package
-        uses: actions/upload-artifact@v4
-        with:
-          name: InventoryPhotoOps-script-installer
-          path: |
-            artifacts/InventoryPhotoOps-script-installer.zip
-            artifacts/InventoryPhotoOps-script-installer.zip.sha256
+            ${{ runner.temp }}\ebay-assistance-release\eBay-Assistance-win-x64-portable.zip
+            ${{ runner.temp }}\ebay-assistance-release\eBay-Assistance-win-x64-portable.zip.sha256
+

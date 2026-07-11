@@ -1,0 +1,25 @@
+name: release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    env:
+      EA_BUILD_ROOT: ${{ runner.temp }}\ebay-assistance-build
+      EA_RELEASE_ROOT: ${{ github.workspace }}\artifacts\release\windows
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet restore InventoryPhotoOps.sln
+      - run: dotnet test InventoryPhotoOps.sln -c Release --logger trx --results-directory TestResults
+      - shell: pwsh
+        run: ./scripts/publish-portable.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eBay-Assistance-windows-release
+          path: artifacts/release/windows
+
