@@ -1,0 +1,63 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          cache: true
+      - name: Restore tools
+        run: dotnet tool restore
+      - name: Restore
+        run: dotnet restore InventoryPhotoOps.sln
+      - name: Parse PowerShell scripts
+        shell: pwsh
+        run: |
+          $errorsFound = $false
+          Get-ChildItem -Recurse -File -Filter *.ps1 | Where-Object { $_.FullName -notmatch '\\legacy-powershell\\' } | ForEach-Object {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errors) | Out-Null
+            if ($errors.Count -gt 0) {
+              $errorsFound = $true
+              Write-Error "$($_.FullName): $($errors[0].Message)"
+            }
+          }
+          if ($errorsFound) { exit 1 }
+      - name: Build
+        run: dotnet build InventoryPhotoOps.sln -c Release --no-restore
+      - name: Test
+        run: dotnet test InventoryPhotoOps.sln -c Release --no-build --logger trx --results-directory TestResults
+      - name: Publish portable
+        run: pwsh ./scripts/publish-portable.ps1
+      - name: Build installer
+        run: pwsh ./scripts/build-installer.ps1
+      - name: Verify release
+        run: pwsh ./scripts/verify-release.ps1
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: TestResults
+      - name: Upload portable package
+        uses: actions/upload-artifact@v4
+        with:
+          name: InventoryPhotoOps-win-x64-portable
+          path: |
+            artifacts/InventoryPhotoOps-win-x64-portable.zip
+            artifacts/InventoryPhotoOps-win-x64-portable.zip.sha256
+      - name: Upload installer package
+        uses: actions/upload-artifact@v4
+        with:
+          name: InventoryPhotoOps-script-installer
+          path: |
+            artifacts/InventoryPhotoOps-script-installer.zip
+            artifacts/InventoryPhotoOps-script-installer.zip.sha256

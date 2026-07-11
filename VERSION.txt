@@ -1,0 +1,3 @@
+eBay-Hero 1.3.0
+Unifies Inventory Photo Ops and CardOps through an idempotent CardOps SQLite importer, eBay-Hero launchers, and Control Center actions.
+Keeps InventoryPhotoOps project names for compatibility with existing migrations, app settings, scripts, and live data paths.

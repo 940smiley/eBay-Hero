@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\InventoryPhotoOps.Core\InventoryPhotoOps.Core.csproj" />
+    <ProjectReference Include="..\InventoryPhotoOps.Infrastructure\InventoryPhotoOps.Infrastructure.csproj" />
+    <ProjectReference Include="..\InventoryPhotoOps.FileSystem\InventoryPhotoOps.FileSystem.csproj" />
+    <ProjectReference Include="..\InventoryPhotoOps.Ocr\InventoryPhotoOps.Ocr.csproj" />
+    <ProjectReference Include="..\InventoryPhotoOps.Export\InventoryPhotoOps.Export.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>

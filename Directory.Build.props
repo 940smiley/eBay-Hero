@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup Condition="'$(EA_BUILD_ROOT)' != ''">
+    <BaseOutputPath>$(EA_BUILD_ROOT)\bin\$(MSBuildProjectName)\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(EA_BUILD_ROOT)\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>
+

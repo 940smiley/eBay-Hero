@@ -1,0 +1,27 @@
+name: codeql
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '31 6 * * 1'
+
+jobs:
+  analyze:
+    runs-on: windows-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: csharp
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet build InventoryPhotoOps.sln -c Release
+      - uses: github/codeql-action/analyze@v3
+
