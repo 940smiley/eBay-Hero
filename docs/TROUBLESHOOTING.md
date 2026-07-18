@@ -1,4 +1,4 @@
-# Troubleshooting
+﻿# Troubleshooting
 
 ## Tesseract Not Found
 
@@ -13,8 +13,8 @@ E:\Apps\tesseract-ocr\tesseract.exe
 Run:
 
 ```powershell
-dotnet run --project .\tools\InventoryPhotoOps.Cli -- database check
-dotnet run --project .\tools\InventoryPhotoOps.Cli -- database backup
+dotnet run --project .\tools\eBayHero.Cli -- database check
+dotnet run --project .\tools\eBayHero.Cli -- database backup
 ```
 
 ## Logs
@@ -24,4 +24,5 @@ Logs are written under:
 ```text
 D:\INVENTORY_PHOTO_OPS\logs
 ```
+
 

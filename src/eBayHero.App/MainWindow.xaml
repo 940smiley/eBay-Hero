@@ -1,0 +1,363 @@
+﻿<Window x:Class="eBayHero.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="eBay-Hero" Height="820" Width="1380" MinHeight="720" MinWidth="1180"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel LastChildFill="True">
+        <Border DockPanel.Dock="Top" BorderBrush="#DDDDDD" BorderThickness="0,0,0,1" Padding="8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <WrapPanel Grid.Row="0">
+                    <Button Content="Refresh" Command="{Binding InitializeCommand}"/>
+                    <Button Content="Dry-run migration" Command="{Binding DryRunMigrationCommand}"/>
+                    <Button Content="Scan roots" Command="{Binding ScanRootsCommand}"/>
+                    <Button Content="Dedupe scan" Command="{Binding DedupeScanCommand}"/>
+                    <Button Content="OCR selected" Command="{Binding OcrSelectedCommand}"/>
+                    <Button Content="OCR highlighted" Command="{Binding OcrHighlightedRegionCommand}"/>
+                    <Button Content="Apply metadata edits" Command="{Binding ApplyMetadataToSelectedImagesCommand}"/>
+                    <Button Content="Auto sort categorized" Command="{Binding AutoSortCategorizedPhotosCommand}"/>
+                    <Button Content="Auto A/B/C" Command="{Binding AssignAutoRoleCodesCommand}"/>
+                    <Button Content="Front A" Command="{Binding AssignFrontRoleCodesCommand}"/>
+                    <Button Content="Rear B" Command="{Binding AssignRearRoleCodesCommand}"/>
+                    <Button Content="Next C-Z" Command="{Binding AssignNextAdditionalRoleCodesCommand}"/>
+                    <Button Content="Corner CS" Command="{Binding AssignCornerRoleCodesCommand}"/>
+                    <Button Content="Damage Dd" Command="{Binding AssignDamageRoleCodesCommand}"/>
+                    <Button Content="Export selected" Command="{Binding ExportSelectedCommand}"/>
+                    <Button Content="Database check" Command="{Binding DatabaseCheckCommand}"/>
+                    <TextBlock Margin="20,7,6,0" Text="Search"/>
+                    <TextBox Width="260" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                    <CheckBox Margin="15,7,0,0" Content="Only not listed" IsChecked="{Binding FilterNotListed}"/>
+                    <CheckBox Margin="10,7,0,0" Content="Unreviewed OCR" IsChecked="{Binding FilterUnreviewedOcr}"/>
+                    <CheckBox Margin="10,7,0,0" Content="Missing" IsChecked="{Binding FilterMissing}"/>
+                    <CheckBox Margin="10,7,0,0" Content="Hide currently listed" IsChecked="{Binding HideCurrentlyListed}"/>
+                    <CheckBox Margin="10,7,0,0" Content="Hide listed/sold" IsChecked="{Binding HideFinishedListings}"/>
+                    <CheckBox Margin="10,7,0,0" Content="Hide done tags" IsChecked="{Binding HideDoneTags}"/>
+                    <CheckBox Margin="10,7,0,0" Content="Workflow sort" IsChecked="{Binding UseWorkflowSort}"/>
+                    <CheckBox Margin="10,7,0,0" Content="Hide terms" IsChecked="{Binding HideHiddenMetadataTerms}"/>
+                    <TextBox Width="180" Margin="6,0,0,0" Text="{Binding HiddenMetadataTerms, UpdateSourceTrigger=PropertyChanged}"/>
+                </WrapPanel>
+                <TextBlock Grid.Row="1" Margin="3,8,3,0" Text="{Binding StatusText}" TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </Border>
+
+        <TabControl>
+            <TabItem Header="Inventory">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="390"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid x:Name="PhotoGrid"
+                              Grid.Column="0"
+                              ItemsSource="{Binding FilteredRows}"
+                              SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                              SelectionChanged="PhotoGrid_SelectionChanged"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserSortColumns="True"
+                              CanUserResizeColumns="True"
+                              SelectionMode="Extended"
+                              SelectionUnit="FullRow"
+                              EnableRowVirtualization="True"
+                              EnableColumnVirtualization="True"
+                              VirtualizingPanel.IsVirtualizing="True"
+                              VirtualizingPanel.VirtualizationMode="Recycling"
+                              ScrollViewer.CanContentScroll="True"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              HeadersVisibility="Column"
+                              ColumnHeaderHeight="34"
+                              MinRowHeight="32"
+                              GridLinesVisibility="Horizontal">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="MinHeight" Value="32"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Padding" Value="6,3"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="File" Binding="{Binding FileName}" Width="180"/>
+                            <DataGridTextColumn Header="Item / group" Binding="{Binding ItemName}" Width="180"/>
+                            <DataGridTextColumn Header="Code" Binding="{Binding ImageRoleCode}" Width="70"/>
+                            <DataGridTextColumn Header="View" Binding="{Binding ViewType}" Width="105"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding ListingStatus}" Width="115"/>
+                            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="120"/>
+                            <DataGridTextColumn Header="Subcategory" Binding="{Binding SportOrGame}" Width="120"/>
+                            <DataGridTextColumn Header="Player/title" Binding="{Binding PlayerOrTitle}" Width="160"/>
+                            <DataGridTextColumn Header="Year" Binding="{Binding Year}" Width="70"/>
+                            <DataGridTextColumn Header="Brand" Binding="{Binding Brand}" Width="120"/>
+                            <DataGridTextColumn Header="Set" Binding="{Binding SetName}" Width="140"/>
+                            <DataGridTextColumn Header="Serial" Binding="{Binding SerialNumber}" Width="95"/>
+                            <DataGridTextColumn Header="Card #" Binding="{Binding CardNumber}" Width="85"/>
+                            <DataGridTextColumn Header="Tags" Binding="{Binding Tags}" Width="170"/>
+                            <DataGridTextColumn Header="OCR %" Binding="{Binding OcrConfidence}" Width="70"/>
+                            <DataGridCheckBoxColumn Header="OCR reviewed" Binding="{Binding OcrReviewed}" Width="105"/>
+                            <DataGridCheckBoxColumn Header="Duplicate" Binding="{Binding IsDuplicate}" Width="85"/>
+                            <DataGridTextColumn Header="Full path" Binding="{Binding FullPath}" Width="320"/>
+                            <DataGridCheckBoxColumn Header="Missing" Binding="{Binding IsMissing}" Width="75"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border Grid.Column="1" BorderBrush="#DDDDDD" BorderThickness="1,0,0,0" Background="#222222">
+                        <DockPanel LastChildFill="True">
+                            <TextBlock DockPanel.Dock="Bottom"
+                                       Text="{Binding SelectedRow.FullPath}"
+                                       Foreground="White"
+                                       Padding="8"
+                                       TextWrapping="Wrap"/>
+                            <Border DockPanel.Dock="Bottom"
+                                    Background="#F7F7F7"
+                                    BorderBrush="#D8D8D8"
+                                    BorderThickness="0,1,0,0"
+                                    Padding="8"
+                                    Height="355">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding MetadataSelectionSummary}" FontWeight="SemiBold"/>
+                                        <Grid Margin="0,8,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="96"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,3,8,5" Text="Item / group"/>
+                                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,0,0,5" Text="{Binding MetadataItemName, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,3,8,5" Text="Category"/>
+                                            <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"
+                                                      IsEditable="True"
+                                                      IsTextSearchEnabled="True"
+                                                      ItemsSource="{Binding CategoryOptions}"
+                                                      Text="{Binding MetadataCategory, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,3,8,5" Text="Subcategory"/>
+                                            <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,5"
+                                                      IsEditable="True"
+                                                      IsTextSearchEnabled="True"
+                                                      ItemsSource="{Binding SportOrGameOptions}"
+                                                      Text="{Binding MetadataSportOrGame, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,3,8,5" Text="Player/title"/>
+                                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,5" Text="{Binding MetadataPlayerOrTitle, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,3,8,5" Text="Year"/>
+                                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,5" Text="{Binding MetadataYear, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="0" Margin="0,3,8,5" Text="Brand"/>
+                                            <ComboBox Grid.Row="5" Grid.Column="1" Margin="0,0,0,5"
+                                                      IsEditable="True"
+                                                      IsTextSearchEnabled="True"
+                                                      ItemsSource="{Binding BrandOptions}"
+                                                      Text="{Binding MetadataBrand, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="6" Grid.Column="0" Margin="0,3,8,5" Text="Set"/>
+                                            <TextBox Grid.Row="6" Grid.Column="1" Margin="0,0,0,5" Text="{Binding MetadataSetName, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="7" Grid.Column="0" Margin="0,3,8,5" Text="Card #"/>
+                                            <TextBox Grid.Row="7" Grid.Column="1" Margin="0,0,0,5" Text="{Binding MetadataCardNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="8" Grid.Column="0" Margin="0,3,8,5" Text="Serial"/>
+                                            <TextBox Grid.Row="8" Grid.Column="1" Margin="0,0,0,5" Text="{Binding MetadataSerialNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="9" Grid.Column="0" Margin="0,3,8,5" Text="Condition"/>
+                                            <TextBox Grid.Row="9" Grid.Column="1" Margin="0,0,0,5" Text="{Binding MetadataCondition, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="10" Grid.Column="0" Margin="0,3,8,5" Text="Tags"/>
+                                            <TextBox Grid.Row="10" Grid.Column="1" Margin="0,0,0,5" Text="{Binding MetadataTags, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="11" Grid.Column="0" Margin="0,3,8,0" Text="Notes"/>
+                                            <TextBox Grid.Row="11" Grid.Column="1"
+                                                     MinHeight="42"
+                                                     AcceptsReturn="True"
+                                                     TextWrapping="Wrap"
+                                                     Text="{Binding MetadataNotes, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="12" Grid.Column="0" Margin="0,3,8,0" Text="View"/>
+                                            <StackPanel Grid.Row="12" Grid.Column="1" Orientation="Horizontal">
+                                                <RadioButton Content="Front" IsChecked="{Binding MetadataViewFront}" GroupName="MetadataViewType"/>
+                                                <RadioButton Content="Rear" Margin="14,0,0,0" IsChecked="{Binding MetadataViewRear}" GroupName="MetadataViewType"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                                            <Button Content="Reload fields" Command="{Binding ReloadMetadataEditorCommand}"/>
+                                            <Button Content="Apply to selected" Margin="8,0,0,0" Command="{Binding ApplyMetadataToSelectedImagesCommand}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                            <Grid Margin="8" Background="#222222">
+                                <Image x:Name="PreviewImageControl"
+                                       Source="{Binding PreviewImage}"
+                                       Stretch="Uniform"
+                                       ImageFailed="PreviewImage_ImageFailed"/>
+                                <Canvas x:Name="OcrSelectionCanvas"
+                                        Background="Transparent"
+                                        MouseLeftButtonDown="OcrSelectionCanvas_MouseLeftButtonDown"
+                                        MouseMove="OcrSelectionCanvas_MouseMove"
+                                        MouseLeftButtonUp="OcrSelectionCanvas_MouseLeftButtonUp">
+                                    <Rectangle x:Name="OcrSelectionRectangle"
+                                               Visibility="Collapsed"
+                                               Stroke="#33A1FF"
+                                               StrokeThickness="2"
+                                               Fill="#3333A1FF"/>
+                                </Canvas>
+                            </Grid>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="OCR Review">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Column="0">
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <Button Content="Run OCR" Command="{Binding OcrSelectedCommand}"/>
+                            <Button Content="OCR highlighted" Command="{Binding OcrHighlightedRegionCommand}"/>
+                            <Button Content="Save review" Command="{Binding SaveOcrReviewCommand}"/>
+                            <Button Content="Save + learn" Command="{Binding SaveOcrAndLearnCommand}"/>
+                            <TextBlock Margin="12,5,0,0" Text="{Binding OcrRegionSummary}" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                        <TextBox Text="{Binding OcrReviewText, UpdateSourceTrigger=PropertyChanged}"
+                                 AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 TextWrapping="Wrap"
+                                 Margin="0,8,8,0"/>
+                    </DockPanel>
+                    <DataGrid Grid.Column="1" ItemsSource="{Binding OcrCandidates}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Score" Binding="{Binding Score}" Width="70"/>
+                            <DataGridTextColumn Header="Conf" Binding="{Binding Confidence}" Width="70"/>
+                            <DataGridTextColumn Header="Profile" Binding="{Binding Profile}" Width="140"/>
+                            <DataGridTextColumn Header="Text" Binding="{Binding Text}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Image Editor">
+                <DockPanel Margin="8">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Button Content="Rotate left" Command="{Binding RotateSelectedLeftCommand}"/>
+                        <Button Content="Rotate right" Command="{Binding RotateSelectedRightCommand}"/>
+                        <Button Content="Crop center" Command="{Binding CropSelectedCenterCommand}"/>
+                        <Button Content="Fine -1" Command="{Binding FineRotateSelectedLeftCommand}"/>
+                        <Button Content="Fine +1" Command="{Binding FineRotateSelectedRightCommand}"/>
+                        <Button Content="Straighten" Command="{Binding StraightenSelectedCommand}"/>
+                        <Button Content="Rerun OCR" Command="{Binding OcrSelectedCommand}"/>
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding EditRows}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" Margin="0,8,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Edited" Binding="{Binding Name}" Width="160"/>
+                            <DataGridTextColumn Header="Derived copy" Binding="{Binding Value}" Width="*"/>
+                            <DataGridTextColumn Header="Operations" Binding="{Binding Detail}" Width="180"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Pricing">
+                <DockPanel Margin="8">
+                    <Button DockPanel.Dock="Top" HorizontalAlignment="Left" Content="Recalculate selected" Command="{Binding RecalculatePricingCommand}"/>
+                    <DataGrid ItemsSource="{Binding PricingRows}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" Margin="0,8,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Metric" Binding="{Binding Name}" Width="180"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="160"/>
+                            <DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Lot Builder">
+                <DockPanel Margin="8">
+                    <Button DockPanel.Dock="Top" HorizontalAlignment="Left" Content="Create lot from selected" Command="{Binding CreateLotFromSelectionCommand}"/>
+                    <DataGrid ItemsSource="{Binding LotRows}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" Margin="0,8,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Name}" Width="120"/>
+                            <DataGridTextColumn Header="Lot" Binding="{Binding Value}" Width="260"/>
+                            <DataGridTextColumn Header="Totals" Binding="{Binding Detail}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Listings">
+                <DockPanel Margin="8">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Button Content="Create draft" Command="{Binding CreateListingDraftCommand}"/>
+                        <Button Content="Audit latest" Command="{Binding RunListingAuditCommand}"/>
+                        <Button Content="Export selected" Command="{Binding ExportSelectedCommand}"/>
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding ListingRows}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" Margin="0,8,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Name}" Width="130"/>
+                            <DataGridTextColumn Header="Title" Binding="{Binding Value}" Width="*"/>
+                            <DataGridTextColumn Header="Publishing" Binding="{Binding Detail}" Width="180"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Audits">
+                <DataGrid ItemsSource="{Binding AuditRows}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" Margin="8">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Severity" Binding="{Binding Name}" Width="120"/>
+                        <DataGridTextColumn Header="Rule" Binding="{Binding Value}" Width="220"/>
+                        <DataGridTextColumn Header="Finding" Binding="{Binding Detail}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem Header="Jobs">
+                <DataGrid ItemsSource="{Binding JobRows}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" Margin="8">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Job" Binding="{Binding Name}" Width="150"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Value}" Width="120"/>
+                        <DataGridTextColumn Header="Progress" Binding="{Binding Detail}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem Header="eBay Connection">
+                <DockPanel Margin="8">
+                    <Button DockPanel.Dock="Top" HorizontalAlignment="Left" Content="Refresh capability status" Command="{Binding RefreshEbayCapabilitiesCommand}"/>
+                    <DataGrid ItemsSource="{Binding EbayRows}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" Margin="0,8,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Capability" Binding="{Binding Name}" Width="220"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Value}" Width="180"/>
+                            <DataGridTextColumn Header="Reason" Binding="{Binding Detail}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="Roots">
+                <DataGrid ItemsSource="{Binding RootRows}" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" Margin="8">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="State" Binding="{Binding Name}" Width="120"/>
+                        <DataGridTextColumn Header="Root" Binding="{Binding Value}" Width="*"/>
+                        <DataGridTextColumn Header="Availability" Binding="{Binding Detail}" Width="260"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
+

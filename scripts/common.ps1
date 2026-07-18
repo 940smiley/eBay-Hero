@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 function Get-RepoRoot {
@@ -120,7 +120,7 @@ $dirty
 function New-CompatibleTemporaryFile {
     $tempRoot = [System.IO.Path]::GetTempPath()
     for ($i = 0; $i -lt 25; $i++) {
-        $path = Join-Path $tempRoot ("InventoryPhotoOps." + [System.Guid]::NewGuid().ToString('N') + ".tmp")
+        $path = Join-Path $tempRoot ("eBayHero." + [System.Guid]::NewGuid().ToString('N') + ".tmp")
         try {
             $stream = [System.IO.File]::Open($path, [System.IO.FileMode]::CreateNew, [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::Read)
             $stream.Dispose()
@@ -198,3 +198,4 @@ function Invoke-LoggedCommand {
         Remove-Item -LiteralPath $stdout, $stderr -Force -ErrorAction SilentlyContinue
     }
 }
+

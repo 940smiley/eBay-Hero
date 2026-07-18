@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
 Set-StrictMode -Version Latest
@@ -9,10 +9,11 @@ Set-ProjectProcessEnvironment
 $repo = Get-RepoRoot
 Push-Location $repo
 try {
-    & dotnet test .\tests\InventoryPhotoOps.IntegrationTests\InventoryPhotoOps.IntegrationTests.csproj -c Release
+    & dotnet test .\tests\eBayHero.IntegrationTests\eBayHero.IntegrationTests.csproj -c Release
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 finally {
     Pop-Location
 }
+
 

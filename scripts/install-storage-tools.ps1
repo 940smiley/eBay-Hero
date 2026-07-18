@@ -1,5 +1,5 @@
-[CmdletBinding()]
-param([string]$DestinationRoot = 'E:\InventoryPhotoOps-Tools', [switch]$DryRun)
+﻿[CmdletBinding()]
+param([string]$DestinationRoot = 'E:\eBayHero-Tools', [switch]$DryRun)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -14,3 +14,4 @@ foreach ($file in $files) {
     $dst = Join-Path $destRoot $file
     if ($DryRun) { Write-Host "Would copy $src to $dst" } else { Copy-Item -LiteralPath $src -Destination $dst -Force; Write-Host "Copied $dst" }
 }
+

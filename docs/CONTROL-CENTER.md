@@ -1,4 +1,4 @@
-# Control Center
+﻿# Control Center
 
 Launch:
 
@@ -13,5 +13,6 @@ Primary actions include first run, doctor, restore, build, tests, JSON migration
 The compatibility launcher remains available:
 
 ```powershell
-.\InventoryPhotoOps-ControlCenter.bat
+.\eBayHero-ControlCenter.bat
 ```
+

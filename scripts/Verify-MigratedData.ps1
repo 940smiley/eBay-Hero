@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string]$Source = '',
     [string]$Destination = '',
@@ -14,7 +14,7 @@ Set-ProjectProcessEnvironment
 $repo = Get-RepoRoot
 Push-Location $repo
 try {
-    $args = @('run', '--project', '.\tools\InventoryPhotoOps.Cli', '--', 'database', 'check')
+    $args = @('run', '--project', '.\tools\eBayHero.Cli', '--', 'database', 'check')
     if (-not [string]::IsNullOrWhiteSpace($Destination)) { $args += @('--database', $Destination) }
     $output = & dotnet @args 2>&1 | Out-String
     $safeOutput = Redact-Text $output
@@ -28,4 +28,5 @@ try {
 finally {
     Pop-Location
 }
+
 

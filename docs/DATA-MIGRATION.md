@@ -1,8 +1,8 @@
-# Data Migration
+﻿# Data Migration
 
 eBay-Hero has two supported import paths:
 
-- Legacy Inventory Photo Ops JSON catalog migration.
+- Legacy eBay Hero JSON catalog migration.
 - CardOps SQLite import.
 
 Both paths are idempotent and default to dry-run/read-only behavior.
@@ -12,13 +12,13 @@ Both paths are idempotent and default to dry-run/read-only behavior.
 Dry-run:
 
 ```powershell
-dotnet run --project .\tools\InventoryPhotoOps.Migrator -- --dry-run
+dotnet run --project .\tools\eBayHero.Migrator -- --dry-run
 ```
 
 Apply to live operations root:
 
 ```powershell
-dotnet run --project .\tools\InventoryPhotoOps.Migrator -- --apply --allow-live
+dotnet run --project .\tools\eBayHero.Migrator -- --apply --allow-live
 ```
 
 The migrator:
@@ -62,3 +62,4 @@ The CardOps importer:
 - Marks missing CardOps image paths as missing instead of dropping the records.
 - Creates a target SQLite backup before live apply.
 - Tolerates repeat runs and existing records with the same photo/root paths.
+

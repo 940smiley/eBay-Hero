@@ -1,4 +1,4 @@
-# Repository Import Audit
+﻿# Repository Import Audit
 
 Date: 2026-07-01
 
@@ -20,19 +20,19 @@ Source roots scanned:
 | `ebay_inventory_backup`, `COLLECTIBLE_AI_`, `Inventory_Photos_-_Documents`, `image_augmentor` | Mixed clean/dirty states | Backup/docs/older image and collectible experiments | No direct import after focused scan; no stronger reusable implementation than the selected sources was found. |
 | `D:\WORK\GitRepos\CLONED` filtered matches | Read-only scan | Only `easylist-*` matched the filter | Skipped as unrelated. |
 
-## Imported Into Inventory Photo Ops
+## Imported Into eBay Hero
 
-- `CardMetadataAnalyzer` in `InventoryPhotoOps.Core`:
+- `CardMetadataAnalyzer` in `eBayHero.Core`:
   - Extracts trading-card fields from OCR text and filename fallback text.
   - Produces field-level evidence and confidence.
   - Builds marketplace-length card titles.
   - Produces deterministic listing recommendations without claiming sold-comparable access.
 
-- `PhotoPairingAnalyzer` in `InventoryPhotoOps.Core`:
+- `PhotoPairingAnalyzer` in `eBayHero.Core`:
   - Infers front/back/detail roles from filenames.
   - Proposes front/back pairs using filename base keys.
 
-- OCR object crop detection in `InventoryPhotoOps.Ocr`:
+- OCR object crop detection in `eBayHero.Ocr`:
   - Adds connected-component style object crops alongside full-image, card-boundary, and custom crop variants.
   - Writes only derived OCR working images under the configured OCR temp root.
   - Does not overwrite originals.
@@ -54,3 +54,4 @@ Source roots scanned:
 - Add a review UI surface for `CardMetadataAnalysis.Evidence` so users can accept/reject individual OCR-derived metadata fields.
 - Expand object crop detection with a real CV edge detector if OCR still struggles on cards with glare or dark backgrounds.
 - Add a batch grouping command that applies `PhotoPairingAnalyzer.ProposeFrontBackPairs` to selected or newly imported folders.
+

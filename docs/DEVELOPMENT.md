@@ -1,4 +1,4 @@
-# Development
+﻿# Development
 
 Requirements:
 
@@ -10,15 +10,16 @@ Requirements:
 Commands:
 
 ```powershell
-dotnet restore InventoryPhotoOps.sln
-dotnet build InventoryPhotoOps.sln -c Release
-dotnet test InventoryPhotoOps.sln -c Release
+dotnet restore eBayHero.sln
+dotnet build eBayHero.sln -c Release
+dotnet test eBayHero.sln -c Release
 dotnet tool restore
 ```
 
 EF migration generation:
 
 ```powershell
-dotnet tool run dotnet-ef migrations add <Name> --project .\src\InventoryPhotoOps.Infrastructure --startup-project .\tools\InventoryPhotoOps.Cli --output-dir Data\Migrations
+dotnet tool run dotnet-ef migrations add <Name> --project .\src\eBayHero.Infrastructure --startup-project .\tools\eBayHero.Cli --output-dir Data\Migrations
 ```
+
 

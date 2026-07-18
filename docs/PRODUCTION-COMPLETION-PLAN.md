@@ -1,23 +1,23 @@
-# Production Completion Plan
+﻿# Production Completion Plan
 
-Inventory Photo Ops is now a .NET 8 WPF/SQLite application with preserved PowerShell legacy code. The current repository is not a Git checkout, so no Git checkpoint can be created from this folder. Baseline build and tests were run on 2026-07-01 before new implementation work.
+eBay Hero is now a .NET 8 WPF/SQLite application with preserved PowerShell legacy code. The current repository is not a Git checkout, so no Git checkpoint can be created from this folder. Baseline build and tests were run on 2026-07-01 before new implementation work.
 
 ## Baseline
 
-- Repository path: `D:\WORK\Projects\ACTIVE\InventoryPhotoOps`
-- Build: `dotnet build .\InventoryPhotoOps.sln -c Release` passed.
-- Tests: `dotnet test .\InventoryPhotoOps.sln -c Release --no-build` passed, 9 total.
+- Repository path: `D:\WORK\Projects\ACTIVE\eBayHero`
+- Build: `dotnet build .\eBayHero.sln -c Release` passed.
+- Tests: `dotnet test .\eBayHero.sln -c Release --no-build` passed, 9 total.
 - Existing live migration dry-run from the previous release read 826 photos with no missing files.
 - Current script packaging produces a portable ZIP and a script installer.
 
 ## Current Architecture
 
-- `InventoryPhotoOps.Core`: domain entities, options, service contracts, metadata helpers.
-- `InventoryPhotoOps.Infrastructure`: EF Core SQLite context, migrations, JSON migration, database maintenance.
-- `InventoryPhotoOps.FileSystem`: scanning, hashing, safe import planning.
-- `InventoryPhotoOps.Ocr`: Tesseract invocation, candidate scoring, correction/vocabulary learning.
-- `InventoryPhotoOps.Export`: copy-only eBay export manifests.
-- `InventoryPhotoOps.App`: WPF host, inventory grid, preview, basic scan/OCR/export commands.
+- `eBayHero.Core`: domain entities, options, service contracts, metadata helpers.
+- `eBayHero.Infrastructure`: EF Core SQLite context, migrations, JSON migration, database maintenance.
+- `eBayHero.FileSystem`: scanning, hashing, safe import planning.
+- `eBayHero.Ocr`: Tesseract invocation, candidate scoring, correction/vocabulary learning.
+- `eBayHero.Export`: copy-only eBay export manifests.
+- `eBayHero.App`: WPF host, inventory grid, preview, basic scan/OCR/export commands.
 - `tools`: CLI and migrator.
 - `scripts`: build, test, release, packaging helpers.
 
@@ -67,3 +67,4 @@ Inventory Photo Ops is now a .NET 8 WPF/SQLite application with preserved PowerS
 ## Acceptance Tracking
 
 The production acceptance list is tracked in `docs/FEATURE-CAPABILITY-MATRIX.md`. Features marked Complete have working code and tests. Credential-gated or external-approval-gated features must still have local interfaces, secure storage, mock/sandbox paths, docs, and disabled production actions.
+

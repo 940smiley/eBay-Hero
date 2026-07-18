@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param([switch]$DryRun)
 
 Set-StrictMode -Version Latest
@@ -43,26 +43,26 @@ $shortcutDir = Join-Path $programs 'eBay Assistance'
 New-Item -ItemType Directory -Force -Path $shortcutDir | Out-Null
 
 $shortcut = $shell.CreateShortcut((Join-Path $shortcutDir 'eBay Assistance.lnk'))
-$shortcut.TargetPath = Join-Path $InstallRoot 'InventoryPhotoOps.App.exe'
+$shortcut.TargetPath = Join-Path $InstallRoot 'eBayHero.App.exe'
 $shortcut.WorkingDirectory = $InstallRoot
 $shortcut.Save()
 
 $production = $shell.CreateShortcut((Join-Path $shortcutDir 'eBay Assistance Production.lnk'))
-$production.TargetPath = Join-Path $InstallRoot 'InventoryPhotoOps.App.exe'
+$production.TargetPath = Join-Path $InstallRoot 'eBayHero.App.exe'
 $production.Arguments = '--allow-live'
 $production.WorkingDirectory = $InstallRoot
 $production.Save()
 
 $control = $shell.CreateShortcut((Join-Path $shortcutDir 'eBay Assistance Control Center.lnk'))
 $control.TargetPath = 'powershell.exe'
-$control.Arguments = '-NoProfile -ExecutionPolicy Bypass -File "' + (Join-Path $InstallRoot 'scripts\InventoryPhotoOps-ControlCenter.ps1') + '"'
+$control.Arguments = '-NoProfile -ExecutionPolicy Bypass -File "' + (Join-Path $InstallRoot 'scripts\eBayHero-ControlCenter.ps1') + '"'
 $control.WorkingDirectory = $InstallRoot
 $control.Save()
 
 if ($DesktopShortcut) {
     $desktop = [Environment]::GetFolderPath('DesktopDirectory')
     $desktopShortcut = $shell.CreateShortcut((Join-Path $desktop 'eBay Assistance.lnk'))
-    $desktopShortcut.TargetPath = Join-Path $InstallRoot 'InventoryPhotoOps.App.exe'
+    $desktopShortcut.TargetPath = Join-Path $InstallRoot 'eBayHero.App.exe'
     $desktopShortcut.WorkingDirectory = $InstallRoot
     $desktopShortcut.Save()
 }
@@ -84,4 +84,5 @@ Write-Host "Installed eBay Assistance to $InstallRoot"
 finally {
     Pop-Location
 }
+
 

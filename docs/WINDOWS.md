@@ -1,4 +1,4 @@
-# Windows
+﻿# Windows
 
 Status: functional beta baseline.
 
@@ -16,8 +16,8 @@ Verified:
 ```powershell
 $env:EA_BUILD_ROOT='D:\WORK\BuildArtifacts\ebay-assistance'
 $env:NUGET_PACKAGES='D:\WORK\.nuget-packages'
-dotnet build .\InventoryPhotoOps.sln -c Release --no-restore
-dotnet test .\InventoryPhotoOps.sln -c Release --no-build
+dotnet build .\eBayHero.sln -c Release --no-restore
+dotnet test .\eBayHero.sln -c Release --no-build
 ```
 
 Release verification also passed with:
@@ -37,3 +37,4 @@ Blockers for public release:
 
 - Local `C:` drive has too little free space for release packaging unless `EA_RELEASE_ROOT` is set.
 - The current installer artifact is a script-installer ZIP. A maintained installer technology and code signing are still required before public distribution.
+

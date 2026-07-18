@@ -1,8 +1,8 @@
-# eBay Assistance
+﻿# eBay Assistance
 
-eBay Assistance is the canonical consolidation repository for CardOps and Inventory Photo Ops.
+eBay Assistance is the canonical consolidation repository for CardOps and eBay Hero.
 
-Current implementation status: Windows production baseline imported from `InventoryPhotoOps`, with .NET 8 WPF UI, SQLite persistence, image scanning, OCR services, pricing/lot/listing domain services, eBay-safe export, CardOps SQLite import support, CLI/migrator tools, tests, and release scripts.
+Current implementation status: Windows production baseline imported from `eBayHero`, with .NET 8 WPF UI, SQLite persistence, image scanning, OCR services, pricing/lot/listing domain services, eBay-safe export, CardOps SQLite import support, CLI/migrator tools, tests, and release scripts.
 
 ## Build
 
@@ -11,9 +11,9 @@ This machine's `C:` drive is nearly full, so use redirected build roots:
 ```powershell
 $env:EA_BUILD_ROOT='D:\WORK\BuildArtifacts\ebay-assistance'
 $env:NUGET_PACKAGES='D:\WORK\.nuget-packages'
-dotnet restore .\InventoryPhotoOps.sln --packages $env:NUGET_PACKAGES
-dotnet build .\InventoryPhotoOps.sln -c Release --no-restore
-dotnet test .\InventoryPhotoOps.sln -c Release --no-build
+dotnet restore .\eBayHero.sln --packages $env:NUGET_PACKAGES
+dotnet build .\eBayHero.sln -c Release --no-restore
+dotnet test .\eBayHero.sln -c Release --no-build
 ```
 
 Or use:
@@ -45,4 +45,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test.ps1
 - CardOps runtime data, `.ENV`, OAuth token data, logs, thumbnails, and local SQLite data were not imported.
 - Build outputs are ignored and can be redirected with `EA_BUILD_ROOT`.
 - Public Windows packaging is blocked on available local disk space or a redirected release root.
+
 

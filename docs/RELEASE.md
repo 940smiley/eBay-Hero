@@ -1,4 +1,4 @@
-# Release
+﻿# Release
 
 Run:
 
@@ -10,8 +10,8 @@ Run:
 Artifacts:
 
 ```text
-artifacts\InventoryPhotoOps-win-x64-portable.zip
-artifacts\InventoryPhotoOps-script-installer.zip
+artifacts\eBayHero-win-x64-portable.zip
+artifacts\eBayHero-script-installer.zip
 ```
 
 ## Known Limitations
@@ -22,3 +22,4 @@ artifacts\InventoryPhotoOps-script-installer.zip
 - File move/rename rollback APIs are planned beyond import/export planning.
 - UI automation tests currently validate XAML structure rather than driving a live window.
 - Live eBay API integration is intentionally deferred.
+

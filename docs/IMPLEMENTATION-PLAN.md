@@ -1,4 +1,4 @@
-# Inventory Photo Ops Production Rewrite Implementation Plan
+﻿# eBay Hero Production Rewrite Implementation Plan
 
 ## Scope
 
@@ -18,22 +18,22 @@ The PowerShell implementation is retained as a reference under `legacy-powershel
 ## Solution Structure
 
 ```text
-InventoryPhotoOps.sln
+eBayHero.sln
 src/
-  InventoryPhotoOps.App/
-  InventoryPhotoOps.Core/
-  InventoryPhotoOps.Infrastructure/
-  InventoryPhotoOps.Ocr/
-  InventoryPhotoOps.FileSystem/
-  InventoryPhotoOps.Export/
+  eBayHero.App/
+  eBayHero.Core/
+  eBayHero.Infrastructure/
+  eBayHero.Ocr/
+  eBayHero.FileSystem/
+  eBayHero.Export/
 tests/
-  InventoryPhotoOps.Core.Tests/
-  InventoryPhotoOps.Infrastructure.Tests/
-  InventoryPhotoOps.IntegrationTests/
-  InventoryPhotoOps.UiTests/
+  eBayHero.Core.Tests/
+  eBayHero.Infrastructure.Tests/
+  eBayHero.IntegrationTests/
+  eBayHero.UiTests/
 tools/
-  InventoryPhotoOps.Migrator/
-  InventoryPhotoOps.Cli/
+  eBayHero.Migrator/
+  eBayHero.Cli/
 installer/
 scripts/
 docs/
@@ -58,7 +58,7 @@ legacy-powershell/
    - Implement idempotent JSON migration from `D:\INVENTORY_PHOTO_OPS\db\inventory-index.json`.
    - Preserve IDs, paths, groups, tags, metadata, OCR text, statuses, and missing-file status.
    - Write timestamped backup and migration reports.
-   - Provide dry-run and apply commands in `InventoryPhotoOps.Migrator` and `InventoryPhotoOps.Cli`.
+   - Provide dry-run and apply commands in `eBayHero.Migrator` and `eBayHero.Cli`.
 
 4. **File System**
    - Implement path normalization, filename/template rendering, collision detection, hashing, perceptual hash, import planning, rename planning, move planning, journaling, rollback, and undo.
@@ -119,4 +119,5 @@ legacy-powershell/
 - Missing files are reported without crashing.
 - Portable package is produced.
 - Known limitations are documented.
+
 

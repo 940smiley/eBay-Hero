@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$DryRun = $true,
     [switch]$Apply,
@@ -6,7 +6,7 @@ param(
     [switch]$IncludeCaches,
     [switch]$IncludePortableApps,
     [switch]$IncludeSupportedReinstalls,
-    [string]$DestinationRoot = 'E:\InventoryPhotoOps-Tools',
+    [string]$DestinationRoot = 'E:\eBayHero-Tools',
     [string]$ManifestPath,
     [switch]$VerboseLogging
 )
@@ -71,3 +71,4 @@ Write-Host "Storage audit manifest: $ManifestPath"
 if ($Apply) {
     throw "Apply mode is intentionally limited in this version. Review the manifest and perform approved project-owned moves only with a future item-selection manifest."
 }
+

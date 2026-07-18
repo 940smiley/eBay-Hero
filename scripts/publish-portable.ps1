@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param([switch]$DryRun)
 
 Set-StrictMode -Version Latest
@@ -21,11 +21,11 @@ Push-Location $repo
 try {
     New-Item -ItemType Directory -Force -Path $releaseRoot, $publishRoot | Out-Null
     if (Test-Path -LiteralPath $portableRoot) { Remove-Item -LiteralPath $portableRoot -Recurse -Force }
-    & dotnet publish .\src\InventoryPhotoOps.App\InventoryPhotoOps.App.csproj -c Release -r win-x64 --self-contained true -o $portableRoot
+    & dotnet publish .\src\eBayHero.App\eBayHero.App.csproj -c Release -r win-x64 --self-contained true -o $portableRoot
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    & dotnet publish .\tools\InventoryPhotoOps.Cli\InventoryPhotoOps.Cli.csproj -c Release -r win-x64 --self-contained true -o (Join-Path $portableRoot 'tools\cli')
+    & dotnet publish .\tools\eBayHero.Cli\eBayHero.Cli.csproj -c Release -r win-x64 --self-contained true -o (Join-Path $portableRoot 'tools\cli')
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    & dotnet publish .\tools\InventoryPhotoOps.Migrator\InventoryPhotoOps.Migrator.csproj -c Release -r win-x64 --self-contained true -o (Join-Path $portableRoot 'tools\migrator')
+    & dotnet publish .\tools\eBayHero.Migrator\eBayHero.Migrator.csproj -c Release -r win-x64 --self-contained true -o (Join-Path $portableRoot 'tools\migrator')
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     Copy-Item -LiteralPath .\docs -Destination (Join-Path $portableRoot 'docs') -Recurse -Force
     Copy-Item -LiteralPath .\scripts -Destination (Join-Path $portableRoot 'scripts') -Recurse -Force
@@ -37,7 +37,7 @@ try {
         version = (Get-Content -LiteralPath .\VERSION.txt | Select-Object -First 1).Trim()
         createdUtc = (Get-Date).ToUniversalTime().ToString('o')
         runtime = 'win-x64 self-contained'
-        entryPoints = @('InventoryPhotoOps.App.exe', 'scripts\InventoryPhotoOps-ControlCenter.ps1', 'tools\cli\InventoryPhotoOps.Cli.exe', 'tools\migrator\InventoryPhotoOps.Migrator.exe')
+        entryPoints = @('eBayHero.App.exe', 'scripts\eBayHero-ControlCenter.ps1', 'tools\cli\eBayHero.Cli.exe', 'tools\migrator\eBayHero.Migrator.exe')
     } | ConvertTo-Json -Depth 5
     Set-Content -LiteralPath (Join-Path $portableRoot 'release-manifest.json') -Value $manifest -Encoding UTF8
     if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }
@@ -48,3 +48,4 @@ try {
 } finally {
     Pop-Location
 }
+

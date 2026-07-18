@@ -1,4 +1,4 @@
-[CmdletBinding(DefaultParameterSetName='DryRun')]
+﻿[CmdletBinding(DefaultParameterSetName='DryRun')]
 param(
     [Parameter(ParameterSetName='DryRun')][switch]$DryRun,
     [Parameter(ParameterSetName='Apply')][switch]$Apply,
@@ -25,7 +25,7 @@ if (-not (Test-Path -LiteralPath $SourceDb)) {
 $repo = Get-RepoRoot
 Push-Location $repo
 try {
-    $args = @('run','--project','.\tools\InventoryPhotoOps.Cli','--','import','cardops','--source-db',$SourceDb)
+    $args = @('run','--project','.\tools\eBayHero.Cli','--','import','cardops','--source-db',$SourceDb)
     if ($Apply) { $args += '--apply' }
     if ($AllowLive) { $args += '--allow-live' }
     if (-not [string]::IsNullOrWhiteSpace($Database)) { $args += @('--database', $Database) }
@@ -33,3 +33,4 @@ try {
 } finally {
     Pop-Location
 }
+

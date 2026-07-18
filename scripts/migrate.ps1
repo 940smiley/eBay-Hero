@@ -1,4 +1,4 @@
-[CmdletBinding(DefaultParameterSetName='DryRun')]
+﻿[CmdletBinding(DefaultParameterSetName='DryRun')]
 param(
     [Parameter(ParameterSetName='DryRun')][switch]$DryRun,
     [Parameter(ParameterSetName='Apply')][switch]$Apply,
@@ -12,11 +12,11 @@ $repo = Get-RepoRoot
 Push-Location $repo
 try {
     if ($DatabaseCheck) {
-        $args = @('run','--project','.\tools\InventoryPhotoOps.Cli','--','database','check')
+        $args = @('run','--project','.\tools\eBayHero.Cli','--','database','check')
         if ($AllowLive) { $args += '--allow-live' }
         Invoke-LoggedCommand -FilePath 'dotnet' -ArgumentList $args
     } else {
-        $args = @('run','--project','.\tools\InventoryPhotoOps.Migrator','--')
+        $args = @('run','--project','.\tools\eBayHero.Migrator','--')
         if ($Apply) { $args += '--apply' } else { $args += '--dry-run' }
         if ($AllowLive) { $args += '--allow-live' }
         Invoke-LoggedCommand -FilePath 'dotnet' -ArgumentList $args
@@ -24,3 +24,4 @@ try {
 } finally {
     Pop-Location
 }
+

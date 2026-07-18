@@ -1,9 +1,9 @@
-# File Safety
+﻿# File Safety
 
 Safety rules:
 
 - Development defaults refuse live writes without explicit live access.
-- Desktop development launches use `%LOCALAPPDATA%\InventoryPhotoOps-dev`; pass `--allow-live` or set `IPO_ALLOW_LIVE=1` to use the configured live root intentionally.
+- Desktop development launches use `%LOCALAPPDATA%\eBayHero-dev`; pass `--allow-live` or set `IPO_ALLOW_LIVE=1` to use the configured live root intentionally.
 - eBay export copies files only.
 - Import planning detects duplicate hashes and destination collisions.
 - No file is silently overwritten.
@@ -11,3 +11,4 @@ Safety rules:
 - Clean scripts refuse paths outside the repository.
 
 Next-phase work: full rollback execution for multi-file moves/renames, Recycle Bin delete integration, and in-app undo history.
+

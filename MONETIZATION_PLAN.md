@@ -1,4 +1,4 @@
-# Monetization Plan
+﻿# Monetization Plan
 
 ## Free/local tier
 
@@ -24,7 +24,8 @@ Requires cloud or team infrastructure: multiple stores, multiple users, shared i
 - Free: local-only usage with limited listing drafts.
 - Pro: $19-$39/month or $199-$399/year.
 - Business: $79-$199/month depending on stores, users, and provider limits.
-- Services: paid migration/setup for existing CardOps or Inventory Photo Ops data.
+- Services: paid migration/setup for existing CardOps or eBay Hero data.
 
 Do not implement payment processing until the Windows release is stable. Keep licensing behind feature flags and service interfaces so billing can be added without rewriting core workflows.
+
 

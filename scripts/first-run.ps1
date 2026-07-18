@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$Demo,
     [switch]$Live,
@@ -24,7 +24,7 @@ function Step {
         throw
     }
 }
-Step 'Confirm repository path' { if ((Get-RepoRoot) -ne 'D:\WORK\Projects\ACTIVE\InventoryPhotoOps') { throw 'Repository path mismatch.' } }
+Step 'Confirm repository path' { if ((Get-RepoRoot) -ne 'D:\WORK\Projects\ACTIVE\eBayHero') { throw 'Repository path mismatch.' } }
 Step 'Configure project-safe paths' { & (Join-Path $PSScriptRoot 'configure-paths.ps1') -Apply:(!$DryRun) }
 Step 'Doctor diagnostics' { & (Join-Path $PSScriptRoot 'doctor.ps1') -DryRun:$DryRun }
 Step 'Restore dependencies' { & (Join-Path $PSScriptRoot 'restore.ps1') -DryRun:$DryRun }
@@ -36,7 +36,7 @@ Step 'Parse PowerShell scripts' {
         if ($errors.Count -gt 0) { throw "Parse error in $($_.FullName): $($errors[0].Message)" }
     }
 }
-Step 'Build Debug' { Invoke-LoggedCommand -FilePath 'dotnet' -ArgumentList @('build',(Join-Path $repo 'InventoryPhotoOps.sln'),'-c','Debug') -DryRun:$DryRun }
+Step 'Build Debug' { Invoke-LoggedCommand -FilePath 'dotnet' -ArgumentList @('build',(Join-Path $repo 'eBayHero.sln'),'-c','Debug') -DryRun:$DryRun }
 Step 'Run tests' { if ($DryRun) { Write-Host 'Would run test suite.' } else { & (Join-Path $PSScriptRoot 'test.ps1') } }
 Step 'Migration dry run' { & (Join-Path $PSScriptRoot 'migrate.ps1') -DryRun }
 if ($ApplyMigration) {
@@ -49,3 +49,4 @@ Step 'Build installer' { & (Join-Path $PSScriptRoot 'build-installer.ps1') -DryR
 if (-not $DryRun) { $steps | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $reportRoot 'FIRST-RUN-REPORT.json') -Encoding UTF8 }
 if ($Demo -and -not $DryRun) { & (Join-Path $PSScriptRoot 'launch.ps1') -Demo }
 if ($Live -and -not $DryRun) { & (Join-Path $PSScriptRoot 'launch.ps1') -Live }
+
