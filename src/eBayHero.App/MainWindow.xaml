@@ -357,6 +357,13 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
+            <TabItem Header="Plan &amp; Access">
+                <StackPanel Margin="24" MaxWidth="720" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding EditionText}" FontSize="24" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding AccessStatusText}" Margin="0,12,0,18" TextWrapping="Wrap"/>
+                    <TextBlock Text="The public release includes a 14-day trial and 25 premium actions. Inventory and local organization remain available; OCR, pricing, and export require an active trial or Pro entitlement." TextWrapping="Wrap"/>
+                </StackPanel>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

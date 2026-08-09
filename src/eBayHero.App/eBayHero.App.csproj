@@ -20,6 +20,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ProductFlavor Condition="'$(ProductFlavor)' == ''">Public</ProductFlavor>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ProductFlavor)' == 'Development'">
+    <DefineConstants>$(DefineConstants);DEVELOPER_BUILD</DefineConstants>
+    <AssemblyName>eBay-Assistance-Development</AssemblyName>
   </PropertyGroup>
 
 </Project>

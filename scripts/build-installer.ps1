@@ -20,7 +20,7 @@ if ($DryRun) {
 Push-Location $repo
 try {
     & (Join-Path $PSScriptRoot 'publish-portable.ps1')
-    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    if ($LASTEXITCODE -ne 0) { throw "publish-portable.ps1 failed with exit code $LASTEXITCODE." }
 
     New-Item -ItemType Directory -Force -Path $installerRoot | Out-Null
     @'

@@ -23,6 +23,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test.ps1
 ```
 
+## Product build flavors
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-flavors.ps1 -Flavor All
+```
+
+- `Development`: unlimited premium testing.
+- `Public`: 14-day/25-action premium trial with an upgrade gate.
+
+Set `EA_UPGRADE_URL` to the hosted production checkout URL before distributing the public build. Neither flavor enables live eBay publication.
+
 ## Key Docs
 
 - [Architecture](docs/adr/0001-canonical-architecture.md)

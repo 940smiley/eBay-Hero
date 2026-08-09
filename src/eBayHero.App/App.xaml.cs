@@ -4,6 +4,7 @@ using System.Text.Json;
 using eBayHero.App.Logging;
 using eBayHero.App.ViewModels;
 using eBayHero.Core.Configuration;
+using eBayHero.Core.Licensing;
 using eBayHero.Export;
 using eBayHero.FileSystem;
 using eBayHero.Infrastructure;
@@ -50,6 +51,14 @@ public partial class App : Application
             })
             .ConfigureServices(services =>
             {
+                var edition =
+#if DEVELOPER_BUILD
+                    ProductEdition.Development;
+#else
+                    ProductEdition.Public;
+#endif
+                services.AddSingleton<IProductAccessService>(
+                    new ProductAccessService(options.OperationsRoot, edition));
                 services.AddInventoryInfrastructure(options);
                 services.AddInventoryFileSystem();
                 services.AddInventoryOcr();

@@ -1,11 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using eBayHero.Core.Configuration;
+using eBayHero.Core.Licensing;
 using eBayHero.Core.Models;
 using eBayHero.Core.Services;
 using eBayHero.Infrastructure.Data;
@@ -47,6 +49,7 @@ public sealed partial class MainViewModel : ObservableObject
     ];
 
     private readonly InventoryOptions _options;
+    private readonly IProductAccessService _productAccess;
     private readonly IDbContextFactory<InventoryDbContext> _dbContextFactory;
     private readonly IJsonMigrationService _migrationService;
     private readonly IFileScanner _scanner;
@@ -66,6 +69,7 @@ public sealed partial class MainViewModel : ObservableObject
 
     public MainViewModel(
         InventoryOptions options,
+        IProductAccessService productAccess,
         IDbContextFactory<InventoryDbContext> dbContextFactory,
         IJsonMigrationService migrationService,
         IFileScanner scanner,
@@ -84,6 +88,7 @@ public sealed partial class MainViewModel : ObservableObject
         ILogger<MainViewModel> logger)
     {
         _options = options;
+        _productAccess = productAccess;
         _dbContextFactory = dbContextFactory;
         _migrationService = migrationService;
         _scanner = scanner;
@@ -119,6 +124,30 @@ public sealed partial class MainViewModel : ObservableObject
     public ObservableCollection<string> SportOrGameOptions { get; } = [];
     public ObservableCollection<string> BrandOptions { get; } = [];
     public ICollectionView FilteredRows { get; }
+
+    public bool IsDeveloperBuild => _productAccess.Current.IsDeveloper;
+    public Visibility DeveloperMenuVisibility => IsDeveloperBuild ? Visibility.Visible : Visibility.Collapsed;
+    public string EditionText => IsDeveloperBuild ? "Development build — unlimited test access" : "Public release";
+    public string AccessStatusText
+    {
+        get
+        {
+            var access = _productAccess.Current;
+            if (access.IsDeveloper) return "Premium gates bypassed for development testing.";
+            if (access.HasPaidEntitlement) return "Pro entitlement active.";
+            if (!access.IsTrialActive) return "Trial ended — upgrade required for OCR, pricing, and exports.";
+            var days = Math.Max(0, (int)Math.Ceiling((access.TrialEndsUtc - DateTimeOffset.UtcNow).TotalDays));
+            return $"Free trial: {days} day(s), {access.PremiumActionsRemaining} premium action(s) remaining.";
+        }
+    }
+
+    private bool TryUsePremiumFeature()
+    {
+        var allowed = _productAccess.TryConsumePremiumAction(out var message);
+        OnPropertyChanged(nameof(AccessStatusText));
+        if (!allowed) StatusText = message;
+        return allowed;
+    }
 
     [ObservableProperty]
     private PhotoGridRow? selectedRow;
@@ -354,17 +383,29 @@ public sealed partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task OcrSelectedAsync()
     {
+        if (SelectedRow is null)
+        {
+            StatusText = "Select one photo first.";
+            return;
+        }
+        if (!TryUsePremiumFeature()) return;
         await RunOcrForSelectedPhotoAsync(OcrProfile.TradingCardFront, string.Empty, "OCR");
     }
 
     [RelayCommand]
     private async Task OcrHighlightedRegionAsync()
     {
+        if (SelectedRow is null)
+        {
+            StatusText = "Select one photo first.";
+            return;
+        }
         if (string.IsNullOrWhiteSpace(OcrCustomCropJson))
         {
             StatusText = "Highlight a region on the preview image first.";
             return;
         }
+        if (!TryUsePremiumFeature()) return;
 
         await RunOcrForSelectedPhotoAsync(OcrProfile.CustomRegion, OcrCustomCropJson, "Highlighted OCR");
     }
@@ -383,6 +424,7 @@ public sealed partial class MainViewModel : ObservableObject
             StatusText = "Select one photo first.";
             return;
         }
+        if (!TryUsePremiumFeature()) return;
 
         try
         {
@@ -700,6 +742,7 @@ public sealed partial class MainViewModel : ObservableObject
             StatusText = "Select one or more image rows first.";
             return;
         }
+        if (!TryUsePremiumFeature()) return;
 
         try
         {
