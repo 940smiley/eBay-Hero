@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [switch]$Demo,
     [switch]$Live,
@@ -10,6 +10,9 @@ $repo = Get-RepoRoot
 $exe = Join-Path $repo 'src\eBayHero.App\bin\Release\net8.0-windows\eBayHero.App.exe'
 if (-not (Test-Path -LiteralPath $exe)) {
     $exe = Join-Path $repo 'artifacts\publish\eBayHero-win-x64\eBayHero.App.exe'
+}
+if (-not (Test-Path -LiteralPath $exe)) {
+    $exe = Join-Path $repo 'artifacts\build\cache\Build\bin\eBayHero.App\Release\net8.0-windows\eBayHero.App.exe'
 }
 if (-not (Test-Path -LiteralPath $exe)) { throw "App executable not found. Build or publish first." }
 $args = @()

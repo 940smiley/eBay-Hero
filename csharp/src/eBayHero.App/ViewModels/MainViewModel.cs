@@ -64,6 +64,7 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly IListingAuditService _listingAuditService;
     private readonly IEbayConnectionService _ebayConnectionService;
     private readonly IRootManagementService _rootManagementService;
+    private readonly IDiagnosticsBundleService _diagnosticsService;
     private readonly DatabaseMaintenanceService _databaseMaintenance;
     private readonly ILogger<MainViewModel> _logger;
 
@@ -84,6 +85,7 @@ public sealed partial class MainViewModel : ObservableObject
         IListingAuditService listingAuditService,
         IEbayConnectionService ebayConnectionService,
         IRootManagementService rootManagementService,
+        IDiagnosticsBundleService diagnosticsService,
         DatabaseMaintenanceService databaseMaintenance,
         ILogger<MainViewModel> logger)
     {
@@ -103,6 +105,7 @@ public sealed partial class MainViewModel : ObservableObject
         _listingAuditService = listingAuditService;
         _ebayConnectionService = ebayConnectionService;
         _rootManagementService = rootManagementService;
+        _diagnosticsService = diagnosticsService;
         _databaseMaintenance = databaseMaintenance;
         _logger = logger;
         FilteredRows = CollectionViewSource.GetDefaultView(Rows);
@@ -1044,6 +1047,24 @@ public sealed partial class MainViewModel : ObservableObject
         {
             _logger.LogError(ex, "Database check failed");
             StatusText = "Database check failed: " + ex.Message;
+        }
+    }
+
+    [RelayCommand]
+    private async Task CollectDiagnosticsAsync()
+    {
+        try
+        {
+            StatusText = "Collecting diagnostic bundle...";
+            var result = await _diagnosticsService.CollectAsync(
+                new DiagnosticsBundleRequest(_options.OperationsRoot),
+                CancellationToken.None);
+            StatusText = $"Diagnostic bundle: {result.ZipPath} ({result.SectionCount} sections).";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Diagnostics bundle failed");
+            StatusText = "Diagnostics failed: " + ex.Message;
         }
     }
 

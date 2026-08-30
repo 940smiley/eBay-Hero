@@ -5,6 +5,7 @@ using eBayHero.App.Logging;
 using eBayHero.App.ViewModels;
 using eBayHero.Core.Configuration;
 using eBayHero.Core.Licensing;
+using eBayHero.Core.Services;
 using eBayHero.Export;
 using eBayHero.FileSystem;
 using eBayHero.Infrastructure;
@@ -47,7 +48,9 @@ public partial class App : Application
             {
                 builder.ClearProviders();
                 builder.AddDebug();
-                builder.AddProvider(new FileLoggerProvider(Path.Combine(options.OperationsRoot, "logs")));
+                builder.AddProvider(new FileLoggerProvider(
+                    Path.Combine(options.OperationsRoot, "logs"),
+                    new SecretRedactor()));
             })
             .ConfigureServices(services =>
             {

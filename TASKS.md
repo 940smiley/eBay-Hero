@@ -1,6 +1,9 @@
-﻿# Tasks
+# Tasks
 
 ## Completed
+
+- Polyglot monorepo restructure and root launchers created.
+- Documentation updated with beginner instructions and launch/scaling plans.
 
 - Baseline repository commit.
 - Full source discovery across `D:\WORK\GitRepos` and `D:\WORK\Projects`.
@@ -19,5 +22,6 @@
 - Add Linux UI shell plan and implementation.
 - Add iOS/Android scaffold projects when macOS/mobile signing inputs are available.
 - Complete eBay Sandbox OAuth integration.
+
 
 

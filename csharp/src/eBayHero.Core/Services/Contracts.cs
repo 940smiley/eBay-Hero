@@ -122,6 +122,20 @@ public sealed record ExportResult(
     int ItemCount,
     int PhotoCount);
 
+public sealed record DiagnosticsBundleRequest(
+    string OperationsRoot,
+    int MaxAuditEvents = 100,
+    int MaxFailedJobs = 50,
+    int MaxLogFiles = 3,
+    int MaxLogTailLines = 400,
+    long MaxLogFileBytes = 1_048_576);
+
+public sealed record DiagnosticsBundleResult(
+    string BundleDirectory,
+    string ZipPath,
+    int SectionCount,
+    IReadOnlyList<string> Warnings);
+
 public sealed record ImagePreprocessRequest(
     string PhotoId,
     string SourcePath,
@@ -330,6 +344,11 @@ public interface ICardOpsImportService
 public interface IEbayExportService
 {
     Task<ExportResult> ExportAsync(ExportRequest request, CancellationToken cancellationToken);
+}
+
+public interface IDiagnosticsBundleService
+{
+    Task<DiagnosticsBundleResult> CollectAsync(DiagnosticsBundleRequest request, CancellationToken cancellationToken);
 }
 
 public interface IImagePreprocessingService

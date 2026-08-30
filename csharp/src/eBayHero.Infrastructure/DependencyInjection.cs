@@ -1,8 +1,9 @@
-﻿using eBayHero.Core.Configuration;
+using eBayHero.Core.Configuration;
 using eBayHero.Core.Services;
 using eBayHero.Infrastructure.Data;
 using eBayHero.Infrastructure.Migration;
 using eBayHero.Infrastructure.Security;
+using eBayHero.Infrastructure.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,8 @@ public static class DependencyInjection
         services.AddScoped<IJsonMigrationService, LegacyJsonMigrationService>();
         services.AddScoped<ICardOpsImportService, CardOpsImportService>();
         services.AddScoped<DatabaseMaintenanceService>();
+        services.AddSingleton<RedactingBundleWriter>();
+        services.AddScoped<IDiagnosticsBundleService, DiagnosticsBundleService>();
         services.AddSingleton<ISecretStore, DpapiFileSecretStore>();
         services.AddSingleton<ISecretRedactor, SecretRedactor>();
         services.AddSingleton<IRootManagementService, RootManagementService>();

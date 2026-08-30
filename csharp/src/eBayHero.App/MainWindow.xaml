@@ -27,6 +27,7 @@
                     <Button Content="Damage Dd" Command="{Binding AssignDamageRoleCodesCommand}"/>
                     <Button Content="Export selected" Command="{Binding ExportSelectedCommand}"/>
                     <Button Content="Database check" Command="{Binding DatabaseCheckCommand}"/>
+                    <Button Content="Collect diagnostics" Command="{Binding CollectDiagnosticsCommand}"/>
                     <TextBlock Margin="20,7,6,0" Text="Search"/>
                     <TextBox Width="260" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                     <CheckBox Margin="15,7,0,0" Content="Only not listed" IsChecked="{Binding FilterNotListed}"/>
