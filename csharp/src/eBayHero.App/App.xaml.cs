@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.IO;
 using System.Text.Json;
 using eBayHero.App.Logging;
@@ -66,6 +66,12 @@ public partial class App : Application
                 services.AddInventoryFileSystem();
                 services.AddInventoryOcr();
                 services.AddInventoryExport();
+                services.AddSingleton<SettingsViewModel>(sp =>
+                {
+                    var logger = sp.GetRequiredService<ILogger<SettingsViewModel>>();
+                    var settingsPath = Path.Combine(options.OperationsRoot, "settings.json");
+                    return new SettingsViewModel(logger, settingsPath);
+                });
                 services.AddSingleton<MainViewModel>();
                 services.AddSingleton<MainWindow>();
             })
@@ -165,4 +171,3 @@ public partial class App : Application
         }
     }
 }
-

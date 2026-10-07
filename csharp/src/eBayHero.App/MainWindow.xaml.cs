@@ -1,22 +1,25 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using eBayHero.App.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace eBayHero.App;
 
 public partial class MainWindow : Window
 {
     private Point? _ocrSelectionStart;
+    private readonly IServiceProvider _serviceProvider;
 
-    public MainWindow(MainViewModel viewModel)
+    public MainWindow(MainViewModel viewModel, IServiceProvider serviceProvider)
     {
-        ViewModel = viewModel;
-        DataContext = viewModel;
         InitializeComponent();
+        ViewModel = viewModel;
+        _serviceProvider = serviceProvider;
+        DataContext = ViewModel;
     }
 
     public MainViewModel ViewModel { get; }
@@ -172,6 +175,13 @@ public partial class MainWindow : Window
         return image;
     }
 
+    private void SettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        var settingsViewModel = _serviceProvider.GetRequiredService<SettingsViewModel>();
+        var settingsWindow = new SettingsWindow(settingsViewModel);
+        settingsWindow.Owner = this;
+        settingsWindow.ShowDialog();
+    }
+
     private sealed record OcrCropRectangle(int X, int Y, int Width, int Height);
 }
-

@@ -8,7 +8,7 @@ Set-ProjectProcessEnvironment
 $repo = Resolve-Path (Join-Path $PSScriptRoot '..')
 Push-Location $repo
 try {
-    $args = @('build', 'eBayHero.sln', '-c', 'Release')
+    $args = @('build', 'eBayHero.sln', '-c', 'Debug')
     if ($VerboseBuild -or $VerbosePreference -eq 'Continue') { $args += '-v:normal' }
     & dotnet @args
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

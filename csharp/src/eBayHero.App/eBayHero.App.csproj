@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\eBayHero.Core\eBayHero.Core.csproj" />
@@ -29,4 +29,3 @@
   </PropertyGroup>
 
 </Project>
-
