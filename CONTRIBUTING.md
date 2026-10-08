@@ -5,13 +5,13 @@
 3. Run:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\csharp\scripts\test.ps1
 ```
 
 4. For low disk space machines, set:
 
 ```powershell
-$env:EA_BUILD_ROOT='D:\WORK\BuildArtifacts\ebay-assistance'
+$env:EA_BUILD_ROOT='D:\WORK\BuildArtifacts\ebay-hero'
 $env:NUGET_PACKAGES='D:\WORK\.nuget-packages'
 ```
 

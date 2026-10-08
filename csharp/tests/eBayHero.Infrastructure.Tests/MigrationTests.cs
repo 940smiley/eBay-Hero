@@ -2,7 +2,7 @@
 using eBayHero.Core.Models;
 using eBayHero.Core.Services;
 using eBayHero.Infrastructure.Data;
-using eBayHero.Infrastructure.Migration;
+using eBayHero.Infrastructure.Migrations;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 

@@ -4,7 +4,7 @@ using eBayHero.Core.Services;
 using eBayHero.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace eBayHero.Infrastructure.Migration;
+namespace eBayHero.Infrastructure.Migrations;
 
 public sealed class LegacyJsonMigrationService : IJsonMigrationService
 {

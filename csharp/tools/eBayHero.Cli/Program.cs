@@ -6,7 +6,7 @@ using eBayHero.Export;
 using eBayHero.FileSystem;
 using eBayHero.Infrastructure;
 using eBayHero.Infrastructure.Data;
-using eBayHero.Infrastructure.Migration;
+using eBayHero.Infrastructure.Migrations;
 using eBayHero.Ocr;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -9,7 +9,7 @@ using eBayHero.Core.Services;
 using eBayHero.Export;
 using eBayHero.FileSystem;
 using eBayHero.Infrastructure;
-using eBayHero.Infrastructure.Migration;
+using eBayHero.Infrastructure.Migrations;
 using eBayHero.Ocr;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
