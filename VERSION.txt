@@ -1,4 +1,3 @@
-﻿eBay-Hero 1.3.0
-Unifies eBay Hero and CardOps through an idempotent CardOps SQLite importer, eBay-Hero launchers, and Control Center actions.
+eBay-Hero 1.4.0
+Adds the freemium entitlement controller, modular plugin ecosystem (CardOps, Stamplicity, All-in-One AI Suite), the eBay REST/Trading automation engine, and the interactive GitHub Pages demo.
 Keeps eBayHero project names for compatibility with existing migrations, app settings, scripts, and live data paths.
-
