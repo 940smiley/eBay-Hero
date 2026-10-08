@@ -11,7 +11,7 @@ using eBayHero.Core.Licensing;
 using eBayHero.Core.Models;
 using eBayHero.Core.Services;
 using eBayHero.Infrastructure.Data;
-using eBayHero.Infrastructure.Migration;
+using eBayHero.Infrastructure.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

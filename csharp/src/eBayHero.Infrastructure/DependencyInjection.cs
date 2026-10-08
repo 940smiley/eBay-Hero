@@ -1,7 +1,7 @@
 using eBayHero.Core.Configuration;
 using eBayHero.Core.Services;
 using eBayHero.Infrastructure.Data;
-using eBayHero.Infrastructure.Migration;
+using eBayHero.Infrastructure.Migrations;
 using eBayHero.Infrastructure.Security;
 using eBayHero.Infrastructure.Diagnostics;
 using Microsoft.EntityFrameworkCore;
