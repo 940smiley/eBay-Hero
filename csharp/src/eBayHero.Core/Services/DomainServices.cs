@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using eBayHero.Core.Models;
@@ -16,6 +16,28 @@ public static partial class PathUtility
 
         return Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     }
+
+    /// <summary>
+    /// Produces a host-independent canonical form used only for *comparison* of paths.
+    /// eBay Hero is a Windows-first product whose inventory roots frequently live on
+    /// removable drives, so duplicate-root detection must behave identically whether the
+    /// process runs on Windows, macOS, or Linux (e.g. CI). We normalize both path
+    /// separators to '/', drop trailing separators, and let callers compare
+    /// case-insensitively. This deliberately does not touch the filesystem.
+    /// </summary>
+    public static string CanonicalizeForComparison(string path)
+    {
+        var normalized = NormalizePath(path);
+        if (normalized.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        return normalized
+            .Replace(Path.AltDirectorySeparatorChar, '/')
+            .Replace('\\', '/')
+            .TrimEnd('/');
+    }
 }
 
 public sealed class WindowsPathService : IPathService
@@ -23,13 +45,16 @@ public sealed class WindowsPathService : IPathService
     public string NormalizePath(string path) => PathUtility.NormalizePath(path);
 
     public bool IsSamePath(string left, string right) =>
-        string.Equals(NormalizePath(left), NormalizePath(right), StringComparison.OrdinalIgnoreCase);
+        string.Equals(
+            PathUtility.CanonicalizeForComparison(left),
+            PathUtility.CanonicalizeForComparison(right),
+            StringComparison.OrdinalIgnoreCase);
 
     public bool IsChildOf(string childPath, string parentPath)
     {
-        var child = NormalizePath(childPath);
-        var parent = NormalizePath(parentPath);
-        return child.StartsWith(parent + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+        var child = PathUtility.CanonicalizeForComparison(childPath);
+        var parent = PathUtility.CanonicalizeForComparison(parentPath);
+        return child.StartsWith(parent + '/', StringComparison.OrdinalIgnoreCase);
     }
 }
 
@@ -42,6 +67,16 @@ public static class FilenameSanitizer
         "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
     };
 
+    /// <summary>
+    /// The characters that are illegal in a Windows file name. We hard-code this set
+    /// instead of relying on Path.GetInvalidFileNameChars(), because the latter is
+    /// host-dependent (it returns only NUL and '/' on Linux). eBay Hero exports and photo
+    /// copy plans are routinely consumed by Windows tooling, so sanitization must be
+    /// deterministic across platforms rather than following the host OS rules.
+    /// </summary>
+    private static readonly char[] InvalidFileNameChars =
+        ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+
     public static string Sanitize(string value, int maxLength = 120, string fallback = "item")
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -49,7 +84,7 @@ public static class FilenameSanitizer
             return fallback;
         }
 
-        var invalid = Path.GetInvalidFileNameChars().ToHashSet();
+        var invalid = InvalidFileNameChars.ToHashSet();
         var builder = new StringBuilder(value.Length);
         foreach (var c in value.Trim())
         {

@@ -10,9 +10,19 @@ namespace eBayHero.IntegrationTests;
 
 public sealed class ImageProcessingIntegrationTests
 {
+    // The sample-card fixture below uses System.Drawing (GDI+), which is only available on
+    // Windows. Guard the GDI+-dependent tests so a Linux/macOS test run skips them instead
+    // of crashing; the Windows CI leg still exercises them fully.
+    private static bool GdiPlusUnavailable => !OperatingSystem.IsWindows();
+
     [Fact]
     public async Task Preprocessing_CreatesDerivedImagesAndCropMetadata()
     {
+        if (GdiPlusUnavailable)
+        {
+            return;
+        }
+
         using var temp = new TempDirectory();
         var source = Path.Combine(temp.Path, "card.png");
         CreateSampleCard(source, 180, 260);
@@ -30,6 +40,11 @@ public sealed class ImageProcessingIntegrationTests
     [Fact]
     public async Task ImageEdit_CropsAndRotatesWithoutOverwritingOriginal()
     {
+        if (GdiPlusUnavailable)
+        {
+            return;
+        }
+
         using var temp = new TempDirectory();
         var source = Path.Combine(temp.Path, "card.png");
         CreateSampleCard(source, 120, 180);

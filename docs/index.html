@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>eBay Hero — Ecosystem Demo</title>
+  <meta name="description" content="Interactive demo of the eBay Hero plugin ecosystem: entitlements, CardOps, Stamplicity, and the All-in-One AI Suite." />
+  <link rel="stylesheet" href="./demo/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <span class="brand-mark">EH</span>
+        <div>
+          <strong>eBay Hero</strong>
+          <span class="brand-sub">Hub-and-spoke ecosystem</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#controls">Controls</a>
+        <a href="#simulations">Simulations</a>
+        <a href="#onboarding">Getting started</a>
+        <a href="#matrix">Feature matrix</a>
+        <a href="https://github.com/940smiley/eBay-Hero">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <span class="pill">Interactive demo · no install required</span>
+        <h1>One listing platform. Many verticals.</h1>
+        <p class="lede">
+          eBay Hero is a local-first eBay listing platform with a modular plugin ecosystem.
+          Toggle tiers and plugins below to see exactly which capabilities unlock — the same
+          entitlement rules the desktop app uses.
+        </p>
+        <div class="hero-stats">
+          <div><strong>3</strong><span>addon slots</span></div>
+          <div><strong>24</strong><span>feature gates</span></div>
+          <div><strong>REST + Trading</strong><span>eBay API surfaces</span></div>
+          <div><strong>100%</strong><span>local-first</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="controls" class="wrap section">
+      <div class="section-head">
+        <h2>Entitlement &amp; plugin controls</h2>
+        <p>Simulate a plan and enable verticals. Locked capabilities show a 🔒.</p>
+      </div>
+
+      <div class="control-grid">
+        <div class="panel">
+          <h3>Plan</h3>
+          <div class="segmented" role="group" aria-label="Tier">
+            <button data-tier="free" class="active">Free</button>
+            <button data-tier="pro">Pro</button>
+            <button data-tier="business">Business</button>
+          </div>
+          <label class="license">
+            <input type="checkbox" id="license-toggle" />
+            <span>Activate a license key (offline signed key)</span>
+          </label>
+          <p class="muted">State: <span id="license-state">Local / unlicensed</span></p>
+          <div class="presets">
+            <button id="preset-free" class="ghost">Free preset</button>
+            <button id="preset-pro" class="ghost">Pro preset</button>
+            <button id="preset-ai" class="ghost">AI Suite preset</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Plugins</h3>
+          <div id="plugin-list" class="plugin-list"></div>
+        </div>
+      </div>
+
+      <div class="panel entitlement-panel">
+        <div class="panel-head">
+          <h3>Unlocked capabilities</h3>
+          <span id="feature-count" class="muted"></span>
+        </div>
+        <div id="feature-grid" class="feature-grid"></div>
+      </div>
+    </section>
+
+    <section id="simulations" class="wrap section">
+      <div class="section-head">
+        <h2>Live workflow simulations</h2>
+        <p>Mocked end-to-end flows. Premium steps appear only when the plan unlocks them.</p>
+      </div>
+      <div class="sim-grid">
+        <article class="panel sim">
+          <h3>eBay API connection test</h3>
+          <p class="muted">OAuth 2.0 sandbox handshake and capability probe.</p>
+          <button id="run-connection" class="primary">Run connection test</button>
+          <div id="connection-log" class="log" aria-live="polite"></div>
+        </article>
+
+        <article class="panel sim">
+          <h3>Bulk draft creation</h3>
+          <p class="muted">Generate drafts from inventory; publishing is gated by plan.</p>
+          <button id="run-bulk" class="primary">Generate bulk drafts</button>
+          <div id="bulk-log" class="log" aria-live="polite"></div>
+        </article>
+
+        <article class="panel sim">
+          <h3>Card OCR workflow</h3>
+          <p class="muted">CardOps recognition, grading detection, and comp pricing.</p>
+          <button id="run-ocr" class="primary">Run card OCR</button>
+          <div id="ocr-log" class="log" aria-live="polite"></div>
+        </article>
+
+        <article class="panel sim">
+          <h3>Stamp cataloging workflow</h3>
+          <p class="muted">Stamplicity catalog entry plus AI philately identification.</p>
+          <button id="run-stamp" class="primary">Run stamp cataloging</button>
+          <div id="stamp-log" class="log" aria-live="polite"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="onboarding" class="wrap section">
+      <div class="section-head">
+        <h2>Getting started wizard</h2>
+        <p>From an empty machine to your first bulk publish preview.</p>
+      </div>
+      <div class="panel wizard">
+        <div class="wizard-bar"><div id="wizard-progress" class="wizard-progress"></div></div>
+        <span id="wizard-step" class="muted"></span>
+        <h3 id="wizard-title"></h3>
+        <p id="wizard-body"></p>
+        <ul id="wizard-checklist" class="checklist"></ul>
+        <div class="wizard-actions">
+          <button id="wizard-back" class="ghost">Back</button>
+          <button id="wizard-next" class="primary">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="matrix" class="wrap section">
+      <div class="section-head">
+        <h2>Feature matrix</h2>
+        <p>Core vs. CardOps vs. Stamplicity, Free vs. Pro / addon.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Capability</th><th>Owner</th><th>Free</th><th>Pro</th><th>Plugin addon</th></tr>
+          </thead>
+          <tbody id="matrix-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="wrap section">
+      <div class="section-head">
+        <h2>How it fits together</h2>
+        <p>The hub owns the eBay engine and entitlements; spokes are isolated plugins.</p>
+      </div>
+      <pre class="diagram">
+        +------------------------ eBay Hero (hub) --------------------------+
+        |  Entitlements  |  Plugin registry  |  Plugin host (isolated)      |
+        |  eBay engine: OAuth 2.0 | Inventory | Fulfillment | Trading       |
+        +-------^----------------------^----------------------^------------+
+                | hooks/routes         | hooks/routes         | hooks/routes
+        +-------+--------+   +---------+--------+   +---------+----------+
+        | CardOps plugin |   | Stamplicity      |   | All-in-One AI Suite|
+        | cards + AI     |   | stamps + AI      |   | master AI unlock   |
+        +----------------+   +------------------+   +--------------------+
+      </pre>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>eBay Hero ecosystem demo · Disabling or removing an addon never breaks core functionality.</p>
+      <p class="muted">Live eBay publishing is disabled by default. Demo data only.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./demo/app.js"></script>
+</body>
+</html>
+

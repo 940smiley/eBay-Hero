@@ -8,8 +8,8 @@ jobs:
   windows:
     runs-on: windows-latest
     env:
-      EA_BUILD_ROOT: ${{ runner.temp }}\ebay-assistance-build
-      EA_RELEASE_ROOT: ${{ runner.temp }}\ebay-assistance-release
+      EA_BUILD_ROOT: ${{ runner.temp }}\ebay-hero-build
+      EA_RELEASE_ROOT: ${{ runner.temp }}\ebay-hero-release
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -19,48 +19,53 @@ jobs:
       - name: Restore tools
         run: dotnet tool restore
       - name: Restore
-        run: dotnet restore InventoryPhotoOps.sln
-      - name: Parse PowerShell scripts
-        shell: pwsh
-        run: |
-          $errorsFound = $false
-          Get-ChildItem -Recurse -File -Filter *.ps1 | ForEach-Object {
-            $tokens = $null
-            $errors = $null
-            [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errors) | Out-Null
-            if ($errors.Count -gt 0) {
-              $errorsFound = $true
-              Write-Error "$($_.FullName): $($errors[0].Message)"
-            }
-          }
-          if ($errorsFound) { exit 1 }
+        run: dotnet restore csharp/eBayHero.sln
       - name: Build
-        run: dotnet build InventoryPhotoOps.sln -c Release --no-restore
+        run: dotnet build csharp/eBayHero.sln -c Release --no-restore
       - name: Test
-        run: dotnet test InventoryPhotoOps.sln -c Release --no-build --logger trx --results-directory "${{ runner.temp }}\test-results"
-      - name: Diagnostic bundle
-        shell: pwsh
-        run: ./scripts/Collect-Diagnostics.ps1 -OutputRoot "${{ runner.temp }}\diagnostics"
-      - name: Publish portable
-        shell: pwsh
-        run: ./scripts/publish-portable.ps1
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: ${{ runner.temp }}\test-results
-      - name: Upload diagnostics
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: diagnostics
-          path: ${{ runner.temp }}\diagnostics
-      - name: Upload portable package
-        uses: actions/upload-artifact@v4
-        with:
-          name: eBay-Assistance-win-x64-portable
-          path: |
-            ${{ runner.temp }}\ebay-assistance-release\eBay-Assistance-win-x64-portable.zip
-            ${{ runner.temp }}\ebay-assistance-release\eBay-Assistance-win-x64-portable.zip.sha256
+        run: dotnet test csharp/eBayHero.sln -c Release --no-build
 
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          cache: true
+      - name: Restore tools
+        run: dotnet tool restore
+      - name: Build cross-platform projects
+        run: |
+          for project in \
+            csharp/src/eBayHero.Core/eBayHero.Core.csproj \
+            csharp/src/eBayHero.Infrastructure/eBayHero.Infrastructure.csproj \
+            csharp/src/eBayHero.FileSystem/eBayHero.FileSystem.csproj \
+            csharp/src/eBayHero.Ocr/eBayHero.Ocr.csproj \
+            csharp/src/eBayHero.Export/eBayHero.Export.csproj \
+            csharp/src/eBayHero.Plugins.CardOps/eBayHero.Plugins.CardOps.csproj \
+            csharp/src/eBayHero.Plugins.Stamplicity/eBayHero.Plugins.Stamplicity.csproj \
+            csharp/src/eBayHero.Plugins.AiSuite/eBayHero.Plugins.AiSuite.csproj \
+            csharp/tools/eBayHero.Cli/eBayHero.Cli.csproj ; do
+            dotnet build "$project" -c Release
+          done
+      - name: Test cross-platform projects
+        run: |
+          dotnet test csharp/tests/eBayHero.Core.Tests/eBayHero.Core.Tests.csproj -c Release
+          dotnet test csharp/tests/eBayHero.Infrastructure.Tests/eBayHero.Infrastructure.Tests.csproj -c Release
+          dotnet test csharp/tests/eBayHero.IntegrationTests/eBayHero.IntegrationTests.csproj -c Release
+          dotnet test csharp/tests/eBayHero.Plugins.Tests/eBayHero.Plugins.Tests.csproj -c Release
+
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax-check demo modules
+        run: |
+          cp docs/demo/data.js /tmp/data.mjs
+          cp docs/demo/app.js /tmp/app.mjs
+          node --check /tmp/data.mjs
+          node --check /tmp/app.mjs

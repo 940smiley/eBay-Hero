@@ -6,7 +6,7 @@ using eBayHero.Infrastructure.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace eBayHero.Infrastructure.Migration;
+namespace eBayHero.Infrastructure.Migrations;
 
 public sealed class CardOpsImportService : ICardOpsImportService
 {
