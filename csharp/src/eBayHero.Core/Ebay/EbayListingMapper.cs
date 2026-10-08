@@ -51,7 +51,7 @@ public sealed class EbayListingMapper
             currency,
             title,
             description,
-            Math.Max(1, item is { } ? 1 : 1),
+            1,
             profile.Payment.PaymentPolicyId,
             profile.Shipping.FulfillmentPolicyId,
             profile.Returns.ReturnPolicyId,
