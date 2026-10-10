@@ -10,7 +10,7 @@ jobs:
       EA_BUILD_ROOT: ${{ runner.temp }}\ebay-hero-build
       EA_RELEASE_ROOT: ${{ github.workspace }}\artifacts\release\windows
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
