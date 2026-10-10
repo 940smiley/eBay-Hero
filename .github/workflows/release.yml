@@ -18,7 +18,7 @@ jobs:
       - run: dotnet test csharp/eBayHero.sln -c Release
       - shell: pwsh
         run: ./csharp/scripts/publish-portable.ps1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: eBay-Hero-windows-release
           path: artifacts/release/windows
